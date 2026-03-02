@@ -3,9 +3,9 @@ const connectToDB = require('./connect');
 const urlRoute = require('./routes/url');
 const path = require('path');
 const URL = require('./models/url');
-const { url } = require('inspector');
 
 const staticRoute = require('./routes/staticRouter');
+const userRoute = require('./routes/user');
 const app = express();
 const port = 8001;
 connectToDB('mongodb://localhost:27017/url-shortener')
@@ -18,7 +18,9 @@ app.set('views', path.resolve('./views'));
 app.use(express.json());
 app.use(express.urlencoded({extended : false}));
 app.use('/url', urlRoute);
+app.use('/user', userRoute);
 app.use('/', staticRoute);
+
 
 app.get('/url/:shortId', async(req,res)=>{
     const shortId = req.params.shortId;
@@ -26,7 +28,7 @@ app.get('/url/:shortId', async(req,res)=>{
         shortID : shortId
     }, {
         $push : {
-            visitedHistory : {
+            visitHistory : {
                 timestamp : Date.now()
             },
         },
