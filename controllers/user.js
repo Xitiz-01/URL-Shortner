@@ -1,4 +1,6 @@
+const{v4 : uuidv4} = require('uuid');
 const User = require('../models/users');
+const{setUser} = require('../service/auth');
 async function handleUserSignup(req, res) {
     const {name , email, password} = req.body;
     await User.create({
@@ -16,6 +18,9 @@ async function handleUserLogin(req, res) {
         return res.render('login',{
             error : "Invalid Credentials"
         });
+        const sessionID = uuidv4();
+        setUser(sessionID, user);
+        res.cookie('uid', sessionID);
     return res.redirect("/");
 
 }
