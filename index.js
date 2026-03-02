@@ -16,20 +16,22 @@ app.set('views', path.resolve('./views'));
 
 
 app.use(express.json());
+app.use(express.urlencoded({extended : false}));
 app.use('/url', urlRoute);
 app.use('/', staticRoute);
 
-app.get('/:shortId', async(req,res)=>{
+app.get('/url/:shortId', async(req,res)=>{
     const shortId = req.params.shortId;
     const entry = await URL.findOneAndUpdate({
         shortID : shortId
     }, {
         $push : {
-            visitHistory : {
+            visitedHistory : {
                 timestamp : Date.now()
-            }
-        }
-    });
+            },
+        },
+    },
+    {new: true});
 
 res.redirect(entry.redirectURL);
 })
