@@ -1,6 +1,8 @@
 const express = require('express');
 const connectToDB = require('./connect');
 const urlRoute = require('./routes/url');
+const cookieParser = require('cookie-parser');
+const{restrictToLoggedInUsers, checkAuth} = require('./middlewares/auth');
 const path = require('path');
 const URL = require('./models/url');
 
@@ -17,9 +19,10 @@ app.set('views', path.resolve('./views'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended : false}));
-app.use('/url', urlRoute);
+app.use(cookieParser());
+app.use('/url', restrictToLoggedInUsers, urlRoute);
 app.use('/user', userRoute);
-app.use('/', staticRoute);
+app.use('/', checkAuth, staticRoute);
 
 
 app.get('/url/:shortId', async(req,res)=>{
