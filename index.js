@@ -3,6 +3,9 @@ const connectToDB = require('./connect');
 const urlRoute = require('./routes/url');
 const path = require('path');
 const URL = require('./models/url');
+const { url } = require('inspector');
+
+const staticRoute = require('./routes/staticRouter');
 const app = express();
 const port = 8001;
 connectToDB('mongodb://localhost:27017/url-shortener')
@@ -11,8 +14,10 @@ connectToDB('mongodb://localhost:27017/url-shortener')
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
 
+
 app.use(express.json());
 app.use('/url', urlRoute);
+app.use('/', staticRoute);
 
 app.get('/:shortId', async(req,res)=>{
     const shortId = req.params.shortId;
