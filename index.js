@@ -13,7 +13,7 @@ const userRoute = require("./routes/user");
 const app = express();
 const PORT = 8001;
 
-connectToMongoDB(process.env.MONGODB ?? "mongodb://localhost:27017/short-url").then(() =>
+connectToMongoDB(process.env.MONGODB ?? "mongodb://localhost:27017/short-url ").then(() =>
   console.log("Mongodb connected")
 );
 
@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkforAuthentication);
 
-app.use("/url", restrictTo(["NORMAL"]), urlRoute);
+app.use("/url", restrictTo(["NORMAL","ADMIN"]), urlRoute);
 app.use("/user", userRoute);
 app.use("/",  staticRoute);
 
