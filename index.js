@@ -11,12 +11,15 @@ const staticRoute = require("./routes/staticRouter");
 const userRoute = require("./routes/user");
 
 const app = express();
-const PORT = 8001;
+const PORT = process.env.PORT || 8001;
 
-connectToMongoDB(process.env.MONGODB ?? "mongodb://localhost:27017/short-url ").then(() =>
-  console.log("Mongodb connected")
-);
-
+connectToMongoDB(process.env.MONGO_URL)
+  .then(() => {
+    console.log("MongoDB Connected");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection failed:", err);
+  });
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
